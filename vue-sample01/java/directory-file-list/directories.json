@@ -1,0 +1,4 @@
+let directories = [{
+    "name": "how-to-write-easy-javascript",
+    "fileList": ["javascript-no-01.html"]
+}]
