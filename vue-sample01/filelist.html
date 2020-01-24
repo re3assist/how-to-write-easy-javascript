@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta charset="UTF-8">
+    <title>ファイル検索</title>
+</head>
+
+<body>
+    <div id="app">
+
+        <template>
+            <v-card
+                class="mx-auto ma-8"
+            >
+                <v-card-title>
+                    検索条件
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                    v-model="word"
+                    label="タイトルまたはファイル名あいまい検索"
+                  ></v-text-field>
+
+                  <v-select v-model="word" :options="directoryList" >
+                      
+                  </v-select>
+
+                  <v-text-field
+                    v-model="limit"
+                    label="表示件数"
+                    ></v-text-field>
+                </v-card-text>
+            </v-card>
+
+            <v-card
+                class="mx-auto ma-8"
+                min-height="300"
+            >
+                <v-card-title>
+                    検索結果
+                </v-card-title>
+
+                <v-list-item three-line v-for="item in limited">
+                    <v-list-item-content>
+                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                        <v-list-item-subtitle v-for="fileName in item.fileList">
+                        {{ fileName }}
+                        </v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-card>
+        </template>
+    </div>
+</body>
+<script src="./directories.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script src="https://unpkg.com/vue-select@latest"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
+<script>
+    Vue.component('v-select', VueSelect.VueSelect);
+    const app = new Vue({
+        el: "#app",
+        data: {
+            word: '',
+            limit: 10,
+            list: directories
+        },
+        computed: {
+            directoryList: function() {
+                let list = [];
+                for (let directory of this.list) {
+                    list.push(directory.name);
+                }
+                return list;
+            },
+            matched: function() {
+                return this.list.filter((el) => {
+
+                    let matchedFileName = false;
+                    el.fileList.forEach(fileName => {
+                        matchedFileName = matchedFileName || fileName.indexOf(this.word) != -1;
+                    });
+
+                    return this.word === "" || el.name.indexOf(this.word) != -1 || matchedFileName;
+                },this)
+            },
+            limited: function() {
+                return this.matched.slice(0, this.limit);
+            }
+        }
+    })
+</script>
+</html>
