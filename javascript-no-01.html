@@ -8,10 +8,11 @@
         window.onload = function() {
             console.log('document.getElementsByClassNameのサンプル');
             var inputs= document.getElementsByClassName('inputs');
-            for (var i = 0; i < inputs.length; i++) {
+            for (let i = 0; i < inputs.length; i++) {
                 console.log(inputs[i].value);
             }
 
+            // こうしよう
             console.log('document.querySelectorAllのサンプル');
             document.querySelectorAll('.inputs').forEach(function (element) {
                 console.log(element.value);
